@@ -1,0 +1,37 @@
+0. Для корректной работы Django необходимо исключить кириллицу из всех системных параметров (имя пользователя, папка пользователя, имя компьютера и пр.)
+1. Скачиваем mod_wsgi: https://github.com/GrahamDumpleton/mod_wsgi/releases
+2. Находим в скачанном архиве модуль (файл *.so), соответствующий версиям ОС, Python и VC
+3. Копируем модуль в папку с модулями Apache (Например: C:\Apache24\modules)
+4. В файл httpd.conf добавляем строчку "LoadModule wsgi_module modules/[имя файла].so"
+5. Перезапускаем Apache и убеждаемся, что он работает.
+6. Далее предполагается, что django-приложение находится в системе в папке C:/testserver/mysite, а для доступа к нему используется URL: http://localhost/django/
+7. Добавляем в httpd.conf:
+WSGIScriptAlias /django C:/testserver/mysite/mysite/wsgi.py
+WSGIPythonPath C:/testserver/mysite
+
+<Directory C:/testserver/mysite/mysite>
+<Files wsgi.py>
+Order deny,allow
+Require all granted
+</Files>
+</Directory>
+
+Значение WSGIScriptAlias указывает местоположение ваших приложений, (/ обозначает корневую директорию), вторым значением указывается расположение файла “WSGI” – см.ниже – в вашей системе, как правило, в корне проекта. (в примере это mysite). Эти настройки позволят Apache обрабатывать любой запрос из директории, указанной как базовая с помощью WSGI-приложения, хранящегося в ней.
+
+WSGIPythonPath гарантрует, что ваш проект доступен для импорта; иначе говоря, что команда import mysite сработает.
+
+Значение <Directory> просто предоставляет Apache доступ к файлу wsgi.py.
+
+8. В директории с нашим приложением (C:\testserver\mysite\mysite) редактируем файл urls.py, так, чтобы при заходе на URL http://localhost/django/ управление передавалось WSGI-обработчику.
+Содержимое файла для описанного примера:
+from django.conf.urls import patterns, include, url
+from django.contrib import admin
+
+urlpatterns = patterns('',
+    # Examples:
+    # url(r'^$', 'mysite.views.home', name='home'),
+    # url(r'^blog/', include('blog.urls')),
+
+   # url(r'^admin/', include(admin.site.urls)),
+)
+9. Перезапускаем Apache и убеждаемся в работоспособности системы и приложения на Django.
