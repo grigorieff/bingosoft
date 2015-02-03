@@ -1,0 +1,10 @@
+0. Предполагается, что Node.js-сервер запущен на 81 порту.
+1. Раскомментировать в httpd.conf строки:
+LoadModule proxy_module modules/mod_proxy.so
+LoadModule proxy_http_module modules/mod_proxy_http.so
+
+2. Добавить в httpd.conf строки:
+ProxyPass /mynodejsproject http://localhost:81/
+ProxyPassReverse /mynodejsproject http://localhost:81/
+
+Теперь при заходе на http://localhost/mynodejsproject обработка будет происходить Node.js-сервером.
