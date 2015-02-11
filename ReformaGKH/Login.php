@@ -4,7 +4,7 @@ try {
 	$client = new SoapClient("http://api-beta.reformagkh.ru/api/wsdl");
 
 	// получаем идентификатор сессии
-	$guid = $client->Login("ABogdanov", "gkh2725");
+	$guid = $client->Login("", "");
 
 	//echo $guid;
 	
