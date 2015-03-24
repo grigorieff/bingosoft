@@ -4,6 +4,8 @@ try {
 	// получаем список отчетных периодов системы
 	$periods = $client->GetReportingPeriodList();
 	
+	//print_r ($periods);
+	
 	$recqty = count($periods);
 	
 	require_once("../config/config_pdo.php");
